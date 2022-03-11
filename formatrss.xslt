@@ -11,8 +11,6 @@
 		</rss>
 	</xsl:template>
 
-	<xsl:output method="xml" cdata-section-elements="title"/>
-
 	<xsl:include href="/formats/Format Date"/>
 	<xsl:variable name="indexPageName" select="'index'"/>
 	<xsl:variable name="callingPage" select="/system-index-block/calling-page/system-page"/>
@@ -64,9 +62,14 @@
 	<xsl:template match="system-page">
 		<xsl:if test="system-data-structure/article-text != ''">
 			<item>
+				
+				<!-- article title -->
 				<title>
 					<xsl:value-of select="title"/>
 				</title>
+				<!-- end article title -->
+				
+				<!-- pubDate -->
 				<pubDate>
 					<xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
 					<xsl:call-template name="format-date">
@@ -75,19 +78,36 @@
 					</xsl:call-template>
 					<xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
 				</pubDate>
+				<!-- end pubDate -->
+
+				<!-- creator -->
 				<xsl:if test="system-data-structure/contact/name != ''">
 					<dc:creator>
-						<xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text><xsl:value-of select="system-data-structure/contact/name"/><xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
+						[cascade:cdata]
+							<xsl:value-of select="system-data-structure/contact/name"/>
+						[/cascade:cdata]  
 					</dc:creator>
 				</xsl:if>
+				<!-- end creator -->
+				
+				<!-- guid -->
 				<guid isPermaLink="false">
 					<xsl:apply-templates mode="make-absolute" select="path"/><xsl:value-of select="$html"/>
 				</guid>
+				<!-- end guid -->
+				
+				<!-- description (summary)-->
 				<description>
-					<xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text><xsl:value-of select="summary"/><xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
+					[cascade:cdata]
+						<xsl:value-of select="summary"/>
+					[/cascade:cdata]
 				</description>
+				<!-- end description (summary)-->
+
+				<!-- body content -->
 				<content:encoded>
-					<xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
+					[cascade:cdata]
+					
 					<!-- embed video -->
 					<xsl:if test="system-data-structure/video/embed/iframe/@src != ''">
 						<xsl:text disable-output-escaping="yes">&lt;!-- wp:embed {"url":"https:</xsl:text><xsl:value-of select="system-data-structure/video/embed/iframe/@src"/><xsl:text disable-output-escaping="yes">","type":"video","providerNameSlug":"youtube","responsive":true,"className":"wp-embed-aspect-16-9 wp-has-aspect-ratio"} --&gt;</xsl:text>
@@ -97,6 +117,7 @@
 						<xsl:text disable-output-escaping="yes">&lt;!-- /wp:embed --&gt;</xsl:text>
 					</xsl:if>
 					<!-- end embed video -->
+					
 					<!-- lead image -->
 					<xsl:if test="system-data-structure/lead-image/image/path!= '/'">
 							<xsl:text disable-output-escaping="yes">&lt;!-- wp:image {"sizeSlug":"large"} --&gt;</xsl:text>
@@ -109,6 +130,7 @@
 							<xsl:text disable-output-escaping="yes">&lt;!-- /wp:image --&gt;</xsl:text>
 					</xsl:if>
 					<!-- end lead image -->
+					
 					<!-- secondary image -->
 					<xsl:for-each select="system-data-structure/secondary-images">
 						<xsl:choose>
@@ -125,23 +147,29 @@
 						</xsl:choose>
 					</xsl:for-each>
 					<!-- end secondary image -->
+					
 					<!-- article text -->
 						<xsl:copy-of select="system-data-structure/article-text/node() | @*"/>
 					<!-- end article text -->
-					<xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
-					
+
+					<!-- related links -->
 					<xsl:if test="system-data-structure/related-links/url !='http://' ">
 						<!-- wp:list -->
 						<h3>Related links</h3>
 						<ul>
 							<xsl:for-each select="system-data-structure/related-links">
-								<li><a href="{url}"><xsl:value-of select="title"></a></li>
+								<li><a href="{url}"><xsl:value-of select="title"/></a></li>
 							</xsl:for-each>
 						</ul>
 						<!-- wp:list -->
 					</xsl:if>
+					<!-- end related links -->
+
+					[/cascade:cdata]
 					
 				</content:encoded>
+				<!-- end body content-->
+				
 				<xsl:for-each select="dynamic-metadata">
 					<xsl:choose>
 						<xsl:when test="value != ''">
