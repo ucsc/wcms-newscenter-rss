@@ -11,6 +11,8 @@
 		</rss>
 	</xsl:template>
 
+	<xsl:output method="xml" cdata-section-elements="title"/>
+
 	<xsl:include href="/formats/Format Date"/>
 	<xsl:variable name="indexPageName" select="'index'"/>
 	<xsl:variable name="callingPage" select="/system-index-block/calling-page/system-page"/>
@@ -127,6 +129,18 @@
 						<xsl:copy-of select="system-data-structure/article-text/node() | @*"/>
 					<!-- end article text -->
 					<xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
+					
+					<xsl:if test="system-data-structure/related-links/url !='http://' ">
+						<!-- wp:list -->
+						<h3>Related links</h3>
+						<ul>
+							<xsl:for-each select="system-data-structure/related-links">
+								<li><a href="{url}"><xsl:value-of select="title"></a></li>
+							</xsl:for-each>
+						</ul>
+						<!-- wp:list -->
+					</xsl:if>
+					
 				</content:encoded>
 				<xsl:for-each select="dynamic-metadata">
 					<xsl:choose>
