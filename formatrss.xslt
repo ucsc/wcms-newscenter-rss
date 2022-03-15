@@ -82,11 +82,11 @@
 
 				<!-- creator -->
 				<xsl:if test="system-data-structure/contact/name != ''">
-					<dc:creator>
+					<author>
 						[cascade:cdata]
-							<xsl:value-of select="system-data-structure/contact/name"/>
+							<xsl:value-of select="system-data-structure/contact/email"/><xsl:text> </xsl:text><xsl:value-of select="system-data-structure/contact/name"/>
 						[/cascade:cdata]  
-					</dc:creator>
+					</author>
 				</xsl:if>
 				<!-- end creator -->
 				
@@ -154,14 +154,14 @@
 
 					<!-- related links -->
 					<xsl:if test="system-data-structure/related-links/url !='http://' ">
-						<!-- wp:list -->
+						<xsl:text disable-output-escaping="yes">&lt;!-- wp:list --&gt;</xsl:text>
 						<h3>Related links</h3>
 						<ul>
 							<xsl:for-each select="system-data-structure/related-links">
 								<li><a href="{url}"><xsl:value-of select="title"/></a></li>
 							</xsl:for-each>
 						</ul>
-						<!-- wp:list -->
+						<xsl:text disable-output-escaping="yes">&lt;!-- wp:list --&gt;</xsl:text>
 					</xsl:if>
 					<!-- end related links -->
 
@@ -173,7 +173,7 @@
 				<xsl:for-each select="dynamic-metadata">
 					<xsl:choose>
 						<xsl:when test="value != ''">
-							<category><xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text><xsl:value-of select="value"/><xsl:text disable-output-escaping="yes">]]&gt;</xsl:text></category>
+							<category>[cascade:cdata]<xsl:value-of select="value"/>[/cascade:cdata]</category>
 						</xsl:when>
 					</xsl:choose>
 				</xsl:for-each>
