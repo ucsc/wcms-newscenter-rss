@@ -1,15 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1" xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/" xmlns:hh="http://www.hannonhill.com/XSL/Functions" xmlns:wp="http://wordpress.org/export/1.2/" xmlns:xalan="http://xml.apache.org/xalan">
-
-	<xsl:template match="system-index-block">
-		<rss version="2.0"
-			xmlns:content="http://purl.org/rss/1.0/modules/content/"
-			xmlns:dc="http://purl.org/dc/elements/1.1/"
-			xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"
-			xmlns:wfw="http://wellformedweb.org/CommentAPI/"
-			xmlns:wp="http://wordpress.org/export/1.2/">
-		</rss>
-	</xsl:template>
 
 	<xsl:include href="/formats/Format Date"/>
 	<xsl:variable name="indexPageName" select="'index'"/>
@@ -68,27 +59,46 @@
 					<xsl:value-of select="title"/>
 				</title>
 				<!-- end article title -->
+
+				<!-- creator -->
+				
+				<xsl:if test="system-data-structure/contact/email != ''">
+					<author>
+					[cascade:cdata]
+						<xsl:value-of select="system-data-structure/contact/email"/>
+					[/cascade:cdata]
+					</author>
+				</xsl:if>
+
+				<xsl:if test="system-data-structure/contact/name != ''">
+					<dc:creator>
+					[cascade:cdata]
+						<xsl:value-of select="system-data-structure/contact/name"/>
+					[/cascade:cdata]
+					</dc:creator>
+				</xsl:if>
+				
+				<!-- end creator -->
 				
 				<!-- pubDate -->
 				<pubDate>
 					<xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
 					<xsl:call-template name="format-date">
 						<xsl:with-param name="date" select="start-date"/>
-						<xsl:with-param name="mask">ddd, dd mmm yyyy HH:MM:ss o</xsl:with-param>
+						<xsl:with-param name="mask">dddd, dd mmm yyyy</xsl:with-param>
 					</xsl:call-template>
 					<xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
 				</pubDate>
 				<!-- end pubDate -->
 
-				<!-- creator -->
-				<xsl:if test="system-data-structure/contact/name != ''">
-					<author>
-						[cascade:cdata]
-							<xsl:value-of select="system-data-structure/contact/email"/><xsl:text> </xsl:text><xsl:value-of select="system-data-structure/contact/name"/>
-						[/cascade:cdata]  
-					</author>
-				</xsl:if>
-				<!-- end creator -->
+				<!-- author and published date -->
+					<xsl:text disable-output-escaping="yes">&lt;!-- wp:html --&gt;</xsl:text>
+						<xsl:if test="system-data-structure/contact/name != ''">
+							<xsl:value-of select="system-data-structure/contact/name"/>
+							<br/>
+						</xsl:if>
+					<xsl:text disable-output-escaping="yes">&lt;!-- /wp:html --&gt;</xsl:text>
+				<!-- end author and published date -->
 				
 				<!-- guid -->
 				<guid isPermaLink="false">
@@ -107,7 +117,7 @@
 				<!-- body content -->
 				<content:encoded>
 					[cascade:cdata]
-					
+
 					<!-- embed video -->
 					<xsl:if test="system-data-structure/video/embed/iframe/@src != ''">
 						<xsl:text disable-output-escaping="yes">&lt;!-- wp:embed {"url":"https:</xsl:text><xsl:value-of select="system-data-structure/video/embed/iframe/@src"/><xsl:text disable-output-escaping="yes">","type":"video","providerNameSlug":"youtube","responsive":true,"className":"wp-embed-aspect-16-9 wp-has-aspect-ratio"} --&gt;</xsl:text>
