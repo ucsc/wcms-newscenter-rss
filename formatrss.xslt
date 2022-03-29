@@ -11,6 +11,8 @@
 	<xsl:variable name="html">.html</xsl:variable>
 	<xsl:variable name="smallCasemachine" select="'abcdefghijklmnopqrstuvwxyz-'"/>
 	<xsl:variable name="upperCasehuman" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ '"/>
+	<xsl:variable name="youtube" select="youtube.com"/>
+	<xsl:variable name="vimeo" select="vimeo"/>
 
 	<xsl:template match="system-index-block">
 		<rss version="2.0">
@@ -70,13 +72,13 @@
 					</author>
 				</xsl:if>
 
-				<xsl:if test="system-data-structure/contact/name != ''">
+				<!--<xsl:if test="system-data-structure/contact/name != ''">
 					<dc:creator>
 					[cascade:cdata]
 						<xsl:value-of select="system-data-structure/contact/name"/>
 					[/cascade:cdata]
 					</dc:creator>
-				</xsl:if>
+				</xsl:if>-->
 				
 				<!-- end creator -->
 				
@@ -90,15 +92,6 @@
 					<xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
 				</pubDate>
 				<!-- end pubDate -->
-
-				<!-- author and published date -->
-					<xsl:text disable-output-escaping="yes">&lt;!-- wp:html --&gt;</xsl:text>
-						<xsl:if test="system-data-structure/contact/name != ''">
-							<xsl:value-of select="system-data-structure/contact/name"/>
-							<br/>
-						</xsl:if>
-					<xsl:text disable-output-escaping="yes">&lt;!-- /wp:html --&gt;</xsl:text>
-				<!-- end author and published date -->
 				
 				<!-- guid -->
 				<guid isPermaLink="false">
@@ -120,11 +113,33 @@
 
 					<!-- embed video -->
 					<xsl:if test="system-data-structure/video/embed/iframe/@src != ''">
-						<xsl:text disable-output-escaping="yes">&lt;!-- wp:embed {"url":"https:</xsl:text><xsl:value-of select="system-data-structure/video/embed/iframe/@src"/><xsl:text disable-output-escaping="yes">","type":"video","providerNameSlug":"youtube","responsive":true,"className":"wp-embed-aspect-16-9 wp-has-aspect-ratio"} --&gt;</xsl:text>
-						<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
-							https:<xsl:value-of select="system-data-structure/video/embed/iframe/@src"/>
-						</div><figcaption><xsl:value-of select="system-data-structure/video/caption"/></figcaption></figure>
-						<xsl:text disable-output-escaping="yes">&lt;!-- /wp:embed --&gt;</xsl:text>
+						<xsl:choose>
+							<!-- youtube -->
+							<xsl:when test="contains(system-data-structure/video/embed/iframe/@src, 'youtube.com')">
+								<xsl:text disable-output-escaping="yes">&lt;!-- wp:embed {"url":"https:</xsl:text><xsl:value-of select="system-data-structure/video/embed/iframe/@src"/><xsl:text disable-output-escaping="yes">","type":"video","providerNameSlug":"youtube","responsive":true,"className":"wp-embed-aspect-16-9 wp-has-aspect-ratio"} --&gt;</xsl:text>
+								<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+									https:<xsl:value-of select="system-data-structure/video/embed/iframe/@src"/>
+								</div><figcaption><xsl:value-of select="system-data-structure/video/caption"/></figcaption></figure>
+								<xsl:text disable-output-escaping="yes">&lt;!-- /wp:embed --&gt;</xsl:text>
+							</xsl:when>
+							<!-- end youtube -->
+							<!-- vimeo -->
+							<xsl:when test="contains(system-data-structure/video/embed/iframe/@src, 'vimeo.com')">
+								<xsl:text disable-output-escaping="yes">&lt;!-- wp:embed {"url":"https:</xsl:text><xsl:value-of select="system-data-structure/video/embed/iframe/@src"/><xsl:text disable-output-escaping="yes">","type":"video","providerNameSlug":"vimeo","responsive":true,"className":"wp-embed-aspect-16-9 wp-has-aspect-ratio"} --&gt;</xsl:text>
+								<figure class="wp-block-embed is-type-video is-provider-vimeo wp-block-embed-vimeo wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+									https:<xsl:value-of select="system-data-structure/video/embed/iframe/@src"/>
+								</div><figcaption><xsl:value-of select="system-data-structure/video/caption"/></figcaption></figure>
+								<xsl:text disable-output-escaping="yes">&lt;!-- /wp:embed --&gt;</xsl:text>
+							</xsl:when>
+							<!-- end vimeo -->
+							<!-- others embed -->
+							<xsl:otherwise>
+								<xsl:text disable-output-escaping="yes">&lt;!-- wp:html --&gt;</xsl:text>
+									<xsl:copy-of select="system-data-structure/video/embed/iframe"/>
+								<xsl:text disable-output-escaping="yes">&lt;!-- /wp:html --&gt;</xsl:text>
+							</xsl:otherwise>
+							<!-- end others embed -->
+						</xsl:choose>
 					</xsl:if>
 					<!-- end embed video -->
 					
@@ -171,7 +186,7 @@
 								<li><a href="{url}"><xsl:value-of select="title"/></a></li>
 							</xsl:for-each>
 						</ul>
-						<xsl:text disable-output-escaping="yes">&lt;!-- wp:list --&gt;</xsl:text>
+						<xsl:text disable-output-escaping="yes">&lt;!-- /wp:list --&gt;</xsl:text>
 					</xsl:if>
 					<!-- end related links -->
 
