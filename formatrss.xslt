@@ -64,10 +64,10 @@
 
 				<!-- creator -->
 				
-				<xsl:if test="system-data-structure/contact/email != ''">
+				<xsl:if test="system-data-structure/contact/name != ''">
 					<author>
 					[cascade:cdata]
-						<xsl:value-of select="system-data-structure/contact/email"/>
+						<xsl:value-of select="system-data-structure/contact/name"/>
 					[/cascade:cdata]
 					</author>
 				</xsl:if>
