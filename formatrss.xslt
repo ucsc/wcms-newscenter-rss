@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1" xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/" xmlns:hh="http://www.hannonhill.com/XSL/Functions" xmlns:wp="http://wordpress.org/export/1.2/" xmlns:xalan="http://xml.apache.org/xalan">
 
 	<xsl:include href="/formats/Format Date"/>
@@ -11,8 +10,8 @@
 	<xsl:variable name="html">.html</xsl:variable>
 	<xsl:variable name="smallCasemachine" select="'abcdefghijklmnopqrstuvwxyz-'"/>
 	<xsl:variable name="upperCasehuman" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ '"/>
-	<xsl:variable name="youtube" select="youtube.com"/>
-	<xsl:variable name="vimeo" select="vimeo"/>
+	<xsl:variable name="lead-width" select="//system-data-structure/lead-image/image/width"/>
+	<xsl:variable name="lead-height" select="//system-data-structure/lead-image/image/height"/>
 
 	<xsl:template match="system-index-block">
 		<rss version="2.0">
@@ -144,10 +143,10 @@
 					<!-- end embed video -->
 					
 					<!-- lead image -->
-					<xsl:if test="system-data-structure/lead-image/image/path!= '/'">
-							<xsl:text disable-output-escaping="yes">&lt;!-- wp:image {"sizeSlug":"large"} --&gt;</xsl:text>
-							<figure class="wp-block-image size-large">
-								<img src="{$site-url}{system-data-structure/lead-image/image/path}" alt="{system-data-structure/lead-image/image-alt}"/>
+					<xsl:if test="system-data-structure/lead-image/image/path != '/'">
+							<xsl:text disable-output-escaping="yes">&lt;!-- wp:image {"align":"right","width":"</xsl:text><xsl:value-of select="$lead-width"/>","height":"<xsl:value-of select="$lead-height"/><xsl:text disable-output-escaping="yes">","sizeSlug":"large"} --&gt;</xsl:text>
+							<figure class="alignright wp-block-image size-large">
+								<img alt="{system-data-structure/lead-image/image-alt}" height="{$lead-height}" src="{$site-url}{system-data-structure/lead-image/image/path}" width="{$lead-width}"/>
 								<xsl:if test="system-data-structure/lead-image/image-caption != ''">
 									<figcaption><xsl:value-of select="system-data-structure/lead-image/image-caption"/></figcaption>
 								</xsl:if>
@@ -160,9 +159,9 @@
 					<xsl:for-each select="system-data-structure/secondary-images">
 						<xsl:choose>
 							<xsl:when test="image/path != '/'">
-								<xsl:text disable-output-escaping="yes">&lt;!-- wp:image {"sizeSlug":"full"} --&gt;</xsl:text>
-								<figure class="wp-block-image size-large">
-									<img src="{$site-url}{image/path}" alt="{image-alt}"/>
+								<xsl:text disable-output-escaping="yes">&lt;!-- wp:image {"align":"right","width":"</xsl:text><xsl:value-of select="image/width"/><xsl:text disable-output-escaping="yes">","height":"</xsl:text><xsl:value-of select="image/height"/><xsl:text disable-output-escaping="yes">","sizeSlug":"large"} --&gt;</xsl:text>
+								<figure class="alignright wp-block-image size-large">
+									<img alt="{image-alt}" height="{image/height}" src="{$site-url}{image/path}" width="{image/width}"/>
 									<xsl:if test="image-caption != ''">
 										<figcaption><xsl:value-of select="image-caption"/></figcaption>
 									</xsl:if>
