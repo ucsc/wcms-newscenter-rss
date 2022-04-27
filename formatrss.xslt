@@ -144,8 +144,8 @@
 					
 					<!-- lead image -->
 					<xsl:if test="system-data-structure/lead-image/image/path != '/'">
-							<xsl:text disable-output-escaping="yes">&lt;!-- wp:image {"align":"right","width":"</xsl:text><xsl:value-of select="$lead-width"/>","height":"<xsl:value-of select="$lead-height"/><xsl:text disable-output-escaping="yes">","sizeSlug":"large"} --&gt;</xsl:text>
-							<figure class="alignright wp-block-image size-large">
+							<xsl:text disable-output-escaping="yes">&lt;!-- wp:image {"align":"right","width":</xsl:text><xsl:value-of select="$lead-width"/><xsl:text disable-output-escaping="yes">,"height":</xsl:text><xsl:value-of select="$lead-height"/><xsl:text disable-output-escaping="yes">,"sizeSlug":"large"} --&gt;</xsl:text>
+							<figure class="wp-block-image alignright wp-block-image size-large">
 								<img alt="{system-data-structure/lead-image/image-alt}" height="{$lead-height}" src="{$site-url}{system-data-structure/lead-image/image/path}" width="{$lead-width}"/>
 								<xsl:if test="system-data-structure/lead-image/image-caption != ''">
 									<figcaption><xsl:value-of select="system-data-structure/lead-image/image-caption"/></figcaption>
@@ -159,8 +159,8 @@
 					<xsl:for-each select="system-data-structure/secondary-images">
 						<xsl:choose>
 							<xsl:when test="image/path != '/'">
-								<xsl:text disable-output-escaping="yes">&lt;!-- wp:image {"align":"right","width":"</xsl:text><xsl:value-of select="image/width"/><xsl:text disable-output-escaping="yes">","height":"</xsl:text><xsl:value-of select="image/height"/><xsl:text disable-output-escaping="yes">","sizeSlug":"large"} --&gt;</xsl:text>
-								<figure class="alignright wp-block-image size-large">
+								<xsl:text disable-output-escaping="yes">&lt;!-- wp:image {"align":"right","width":</xsl:text><xsl:value-of select="image/width"/><xsl:text disable-output-escaping="yes">,"height":</xsl:text><xsl:value-of select="image/height"/><xsl:text disable-output-escaping="yes">,"sizeSlug":"large"} --&gt;</xsl:text>
+								<figure class="wp-block-image alignright wp-block-image size-large">
 									<img alt="{image-alt}" height="{image/height}" src="{$site-url}{image/path}" width="{image/width}"/>
 									<xsl:if test="image-caption != ''">
 										<figcaption><xsl:value-of select="image-caption"/></figcaption>
