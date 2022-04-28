@@ -109,7 +109,7 @@
 				<!-- body content -->
 				<content:encoded>
 					[cascade:cdata]
-
+					<div class="wp-container-16 entry-content wp-block-post-content">
 					<!-- embed video -->
 					<xsl:if test="system-data-structure/video/embed/iframe/@src != ''">
 						<xsl:choose>
@@ -144,8 +144,8 @@
 					
 					<!-- lead image -->
 					<xsl:if test="system-data-structure/lead-image/image/path != '/'">
-							<xsl:text disable-output-escaping="yes">&lt;!-- wp:image {"align":"right","width":</xsl:text><xsl:value-of select="$lead-width"/><xsl:text disable-output-escaping="yes">,"height":</xsl:text><xsl:value-of select="$lead-height"/><xsl:text disable-output-escaping="yes">,"sizeSlug":"large"} --&gt;</xsl:text>
-							<figure class="wp-block-image alignright wp-block-image size-large">
+							<xsl:text disable-output-escaping="yes">&lt;!-- wp:image {"align":"right","className":"size-large","width":</xsl:text><xsl:value-of select="$lead-width"/><xsl:text disable-output-escaping="yes">,"height":</xsl:text><xsl:value-of select="$lead-height"/><xsl:text disable-output-escaping="yes">,"sizeSlug":"large"} --&gt;</xsl:text>
+							<figure class="wp-block-image alignright is-resized size-large">
 								<img alt="{system-data-structure/lead-image/image-alt}" height="{$lead-height}" src="{$site-url}{system-data-structure/lead-image/image/path}" width="{$lead-width}"/>
 								<xsl:if test="system-data-structure/lead-image/image-caption != ''">
 									<figcaption><xsl:value-of select="system-data-structure/lead-image/image-caption"/></figcaption>
@@ -159,8 +159,8 @@
 					<xsl:for-each select="system-data-structure/secondary-images">
 						<xsl:choose>
 							<xsl:when test="image/path != '/'">
-								<xsl:text disable-output-escaping="yes">&lt;!-- wp:image {"align":"right","width":</xsl:text><xsl:value-of select="image/width"/><xsl:text disable-output-escaping="yes">,"height":</xsl:text><xsl:value-of select="image/height"/><xsl:text disable-output-escaping="yes">,"sizeSlug":"large"} --&gt;</xsl:text>
-								<figure class="wp-block-image alignright wp-block-image size-large">
+								<xsl:text disable-output-escaping="yes">&lt;!-- wp:image {"align":"right","className":"size-large","width":</xsl:text><xsl:value-of select="image/width"/><xsl:text disable-output-escaping="yes">,"height":</xsl:text><xsl:value-of select="image/height"/><xsl:text disable-output-escaping="yes">,"sizeSlug":"large"} --&gt;</xsl:text>
+								<figure class="wp-block-image alignright is-resized size-large">
 									<img alt="{image-alt}" height="{image/height}" src="{$site-url}{image/path}" width="{image/width}"/>
 									<xsl:if test="image-caption != ''">
 										<figcaption><xsl:value-of select="image-caption"/></figcaption>
@@ -188,12 +188,12 @@
 						<xsl:text disable-output-escaping="yes">&lt;!-- /wp:list --&gt;</xsl:text>
 					</xsl:if>
 					<!-- end related links -->
-
+					</div>
 					[/cascade:cdata]
 					
 				</content:encoded>
 				<!-- end body content-->
-				
+
 				<xsl:for-each select="dynamic-metadata">
 					<xsl:choose>
 						<xsl:when test="value != ''">
